@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScamGuard AI — Investment Scam & Ponzi Detection</title>
+  <meta name="description" content="AI-powered system that detects investment scams and Ponzi schemes in social media messages using NLP and machine learning." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Background animated particles -->
+  <div class="bg-orb orb1"></div>
+  <div class="bg-orb orb2"></div>
+  <div class="bg-orb orb3"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <span class="logo-icon">🛡️</span>
+      <span class="logo-text">ScamGuard <span class="logo-ai">AI</span></span>
+    </div>
+    <nav class="header-nav">
+      <span class="nav-badge">FinBERT + XGBoost Dual Engine</span>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="main">
+    <section class="hero">
+      <div class="hero-tag">🔍 Real-Time AI Analysis</div>
+      <h1 class="hero-title">Detect <span class="gradient-text">Scams & Ponzi</span> Schemes Instantly</h1>
+      <p class="hero-subtitle">
+        Paste any social media message, investment offer, or suspicious text below.
+        Our dual-engine AI (TF-IDF + FinBERT) will classify it in seconds.
+      </p>
+    </section>
+
+    <!-- Main Card -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Analyze Message</h2>
+        <div class="model-badges">
+          <span class="badge badge-blue">TF-IDF</span>
+          <span class="badge badge-purple">FinBERT</span>
+          <span class="badge badge-green">XGBoost</span>
+        </div>
+      </div>
+
+      <textarea
+        id="messageInput"
+        class="message-input"
+        placeholder="Paste a social media message, investment offer, or Telegram/WhatsApp message here...&#10;&#10;Example: 'Guaranteed 200% daily returns! Join our crypto mining pool NOW. Limited spots!'"
+        rows="6"
+      ></textarea>
+
+      <div class="input-footer">
+        <span id="charCount" class="char-count">0 characters</span>
+        <div class="action-buttons">
+          <button id="clearBtn" class="btn btn-secondary" onclick="clearInput()">Clear</button>
+          <button id="analyzeBtn" class="btn btn-primary" onclick="analyzeText()">
+            <span class="btn-icon">🔎</span>
+            <span class="btn-text">Analyze Now</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Sample Messages -->
+      <div class="samples">
+        <p class="samples-title">Try a sample:</p>
+        <div class="samples-grid">
+          <button class="sample-btn scam-sample" onclick="loadSample('scam1')">💸 Crypto Scam</button>
+          <button class="sample-btn scam-sample" onclick="loadSample('scam2')">🎰 Ponzi Scheme</button>
+          <button class="sample-btn legit-sample" onclick="loadSample('legit1')">📈 Legit Finance</button>
+          <button class="sample-btn legit-sample" onclick="loadSample('legit2')">🏦 Stock News</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result Card -->
+    <div id="resultCard" class="result-card hidden">
+
+      <!-- Loading state -->
+      <div id="loadingState" class="loading-state">
+        <div class="spinner"></div>
+        <p>Running dual-engine AI analysis…</p>
+      </div>
+
+      <!-- Result state -->
+      <div id="resultState" class="result-state hidden">
+        <div id="resultBanner" class="result-banner">
+          <div class="result-icon-wrap">
+            <span id="resultIcon" class="result-icon">?</span>
+          </div>
+          <div class="result-text">
+            <h3 id="resultLabel" class="result-label">-</h3>
+            <p id="resultSubtitle" class="result-subtitle">-</p>
+          </div>
+          <div id="riskBadge" class="risk-badge">-</div>
+        </div>
+
+        <!-- Probability Bar -->
+        <div class="prob-section">
+          <div class="prob-labels">
+            <span>Legitimate</span>
+            <span>Scam Probability: <strong id="probValue">0%</strong></span>
+          </div>
+          <div class="prob-bar-bg">
+            <div id="probBar" class="prob-bar" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Indicator grid -->
+        <div class="indicator-grid">
+          <div class="indicator-box">
+            <div class="indicator-label">AI Confidence</div>
+            <div id="confValue" class="indicator-value">—</div>
+          </div>
+          <div class="indicator-box">
+            <div class="indicator-label">Risk Level</div>
+            <div id="riskValue" class="indicator-value">—</div>
+          </div>
+          <div class="indicator-box">
+            <div class="indicator-label">Model Engine</div>
+            <div class="indicator-value">TF-IDF + FinBERT</div>
+          </div>
+        </div>
+
+        <button class="btn btn-secondary analyze-another" onclick="reset()">Analyze Another</button>
+
+      </div>
+    </div>
+
+    <!-- Stats Row -->
+    <section class="stats">
+      <div class="stat-card">
+        <div class="stat-value">99.3%</div>
+        <div class="stat-label">Model Accuracy</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">95.9%</div>
+        <div class="stat-label">Scam Recall</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">10K+</div>
+        <div class="stat-label">Messages Trained On</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">2x</div>
+        <div class="stat-label">AI Engines</div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>🎓 Final Year Capstone Project &nbsp;|&nbsp; AI-Based Investment Scam Detection &nbsp;|&nbsp; FinBERT + XGBoost Dual Engine</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

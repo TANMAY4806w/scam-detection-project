@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environment
+venv/
+env/
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Large model files (teammate will regenerate these)
+# Uncomment the lines below if you DON'T want to upload .pkl files (saves space):
+# model_files/*.pkl
+# datasets/*.pkl

@@ -1,0 +1,13 @@
+pandas
+datasets
+scikit-learn
+xgboost
+transformers
+torch
+fastapi
+uvicorn
+joblib
+lime
+pydantic
+requests
+numpy
