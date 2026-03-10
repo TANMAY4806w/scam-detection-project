@@ -25,7 +25,7 @@ key/
 
 # Large model files (teammate will regenerate these)
 # Uncomment the lines below if you DON'T want to upload .pkl files (saves space):
-model_files/*.pkl
-datasets/processed/*.pkl
-datasets/processed/*.csv
-datasets/original/*.csv
+# model_files/*.pkl
+# datasets/processed/*.pkl
+# datasets/processed/*.csv
+# datasets/original/*.csv
