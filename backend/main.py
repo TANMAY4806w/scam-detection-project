@@ -6,15 +6,21 @@ import re
 import torch
 import numpy as np
 from transformers import AutoTokenizer, AutoModel
+import sys
+import os
+
+# Import shared clean_text utility
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "notebooks"))
+from utils import clean_text
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="Fake Investment Scam Detection API",
-    description="API for detecting Ponzi schemes and investment scams using a dual-engine ML pipeline (TF-IDF + FinBERT).",
-    version="1.0.0"
+    title="ScamGuard AI — Scam & Phishing Detection API",
+    description="API for detecting scams, phishing, and smishing using a dual-engine ML pipeline (TF-IDF + FinBERT).",
+    version="2.0.0"
 )
 
-# Enable CORS for the frontend to communicate with the backend
+# Enable CORS for the frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -27,47 +33,38 @@ app.add_middleware(
 device = None
 tokenizer = None
 finbert_model = None
-lr_model = None     # FinBERT-based LR model
+lr_model = None         # FinBERT-based LR model
 tfidf_vectorizer = None
-xgb_model = None    # TF-IDF-based XGBoost model
+xgb_model = None        # TF-IDF-based model
 
-# Input Data Schema
+# Input/Output Schemas
 class PredictionRequest(BaseModel):
     text: str
 
-# Output Data Schema
 class PredictionResponse(BaseModel):
     prediction: str
     probability: float
     risk_level: str
 
-def clean_text(text: str) -> str:
-    text = text.lower()
-    text = re.sub(r'http\S+|www\S+|https\S+', '', text, flags=re.MULTILINE)
-    text = re.sub(r'[^\w\s]', '', text)
-    text = re.sub(r'\s+', ' ', text).strip()
-    return text
-
 @app.on_event("startup")
 def load_models():
-    """Load the machine learning models and tokenizers on API startup"""
+    """Load ML models and tokenizers on API startup"""
     global device, tokenizer, finbert_model, lr_model, tfidf_vectorizer, xgb_model
     try:
         print("Loading models into memory...")
-        # Device configuration
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         print(f"Using device: {device}")
         
-        # Load HuggingFace FinBERT Model (for contextual embeddings)
+        # Load FinBERT for contextual embeddings
         tokenizer = AutoTokenizer.from_pretrained("ProsusAI/finbert")
         finbert_model = AutoModel.from_pretrained("ProsusAI/finbert")
         finbert_model.to(device)
         finbert_model.eval()
         
-        # Load FinBERT-based Logistic Regression model
+        # Load FinBERT-based Logistic Regression
         lr_model = joblib.load("../model_files/primary_scam_model_lr_finbert.pkl")
         
-        # Load TF-IDF vectorizer + XGBoost model (for keyword-based detection)
+        # Load TF-IDF vectorizer + model
         tfidf_vectorizer = joblib.load("../model_files/tfidf_vectorizer.pkl")
         xgb_model = joblib.load("../model_files/scam_model.pkl")
         
@@ -77,7 +74,7 @@ def load_models():
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the Fake Investment Scam Detection API. Go to /docs for Swagger UI."}
+    return {"message": "Welcome to the ScamGuard AI API. Go to /docs for Swagger UI."}
 
 @app.post("/predict", response_model=PredictionResponse)
 def predict_scam(request: PredictionRequest):
@@ -88,11 +85,11 @@ def predict_scam(request: PredictionRequest):
         # Step 1: Text Preprocessing
         cleaned = clean_text(request.text)
         
-        # --- ENGINE 1: TF-IDF + XGBoost (keyword-based) ---
+        # --- ENGINE 1: TF-IDF + Model (keyword-based) ---
         tfidf_features = tfidf_vectorizer.transform([cleaned])
         prob_scam_tfidf = float(xgb_model.predict_proba(tfidf_features)[0][1])
         
-        # --- ENGINE 2: FinBERT + Logistic Regression (semantic-based) ---
+        # --- ENGINE 2: FinBERT + LR (semantic-based) ---
         inputs = tokenizer(cleaned, padding=True, truncation=True, max_length=128, return_tensors="pt")
         inputs = {k: v.to(device) for k, v in inputs.items()}
         
@@ -102,7 +99,7 @@ def predict_scam(request: PredictionRequest):
             
         prob_scam_finbert = float(lr_model.predict_proba(cls_embedding)[0][1])
         
-        # --- ENSEMBLE: Take weighted average (TF-IDF: 50%, FinBERT: 50%) ---
+        # --- ENSEMBLE: Weighted average (50/50) ---
         prob_scam = round((0.5 * prob_scam_tfidf) + (0.5 * prob_scam_finbert), 4)
         
         # Format Output

@@ -34,11 +34,13 @@ It uses a **dual-engine ML pipeline** combining **TF-IDF + XGBoost** (keyword-ba
 scam-detection-project/
 │
 ├── datasets/
-│   ├── merged_scam_dataset.csv         ← Raw merged dataset (10,290 records)
-│   ├── cleaned_scam_dataset.csv        ← Preprocessed text
-│   ├── X_tfidf.pkl                     ← TF-IDF feature matrix
-│   ├── X_finbert.pkl                   ← FinBERT embeddings (768-dim)
-│   ├── y_labels.pkl                    ← Target labels
+│   ├── original/
+│   │   └── merged_scam_dataset.csv     ← Raw merged dataset (21,731 records)
+│   ├── processed/
+│   │   ├── cleaned_scam_dataset.csv    ← Preprocessed text
+│   │   ├── X_tfidf.pkl                 ← TF-IDF feature matrix
+│   │   ├── X_finbert.pkl               ← FinBERT embeddings (768-dim)
+│   │   └── y_labels.pkl                ← Target labels
 │   └── README.md                       ← Dataset documentation
 │
 ├── model_files/
@@ -75,9 +77,9 @@ scam-detection-project/
 
 | Dataset | Source | Label | Count |
 |---------|--------|-------|-------|
-| `zeroshot/twitter-financial-news-sentiment` | HuggingFace | 0 (Legitimate) | 9,543 |
-| `sms_spam` (spam class only) | HuggingFace | 1 (Scam) | 747 |
-| **Merged Dataset** | Combined | 0 + 1 | **10,290** |
+| `redasers/difraud` (SMS/Phishing) | HuggingFace | 0 & 1 | 21,846 |
+| `txnguyen292/adversarial-scam-dataset` | Kaggle | 0 & 1 | 1,200 |
+| **Merged Dataset (Deduplicated)** | Combined | 0 + 1 | **21,731** |
 
 ---
 
@@ -85,11 +87,10 @@ scam-detection-project/
 
 | Model | Features | Accuracy | Scam Recall |
 |-------|----------|----------|-------------|
-| Naive Bayes | TF-IDF | 98.6% | 81.8% |
-| XGBoost (GPU) | TF-IDF | 99.2% | 89.9% |
-| Voting Classifier | TF-IDF | 98.1% | 75.1% |
-| XGBoost (GPU) | FinBERT | 99.1% | 90.6% |
-| **Logistic Regression** ⭐ | **FinBERT** | **99.3%** | **95.9%** |
+| Naive Bayes | TF-IDF | 96.2% | 85.8% |
+| XGBoost (GPU) | TF-IDF | 94.0% | 91.0% |
+| Logistic Regression | FinBERT | 93.5% | 94.3% |
+| **Ensemble (50/50)** ⭐ | **TF-IDF + FinBERT** | **94.5%** | **94.0%** |
 
 > **Why is Recall the key metric?** A missed scam (False Negative) can cause a user to trust a fraudulent scheme and lose money. We optimize for recall to ensure maximum scam coverage.
 

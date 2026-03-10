@@ -11,3 +11,6 @@ lime
 pydantic
 requests
 numpy
+
+huggingface_hub
+kaggle

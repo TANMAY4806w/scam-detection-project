@@ -20,6 +20,9 @@ env/
 Thumbs.db
 .DS_Store
 
+# Kaggle API credentials (NEVER commit this)
+key/
+
 # Large model files (teammate will regenerate these)
 # Uncomment the lines below if you DON'T want to upload .pkl files (saves space):
 # model_files/*.pkl

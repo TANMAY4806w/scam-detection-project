@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Block Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            padding: 20px 30px;
+            width: 1100px;
+        }
+
+        .box {
+            border-radius: 8px;
+            padding: 10px 22px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            width: 420px;
+            border: 2px solid;
+            line-height: 1.4;
+        }
+
+        .box-sub {
+            font-weight: 400;
+            font-size: 11.5px;
+            color: #555;
+            margin-top: 1px;
+        }
+
+        .box-input {
+            background: #f0f4f8;
+            border-color: #94a3b8;
+            color: #1e293b;
+        }
+
+        .box-preprocess {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            color: #334155;
+        }
+
+        .box-tfidf {
+            background: #eff6ff;
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+
+        .box-xgb {
+            background: #dbeafe;
+            border-color: #2563eb;
+            color: #1e40af;
+        }
+
+        .box-p1 {
+            background: #eff6ff;
+            border-color: #93c5fd;
+            color: #1d4ed8;
+        }
+
+        .box-finbert {
+            background: #faf5ff;
+            border-color: #a855f7;
+            color: #6b21a8;
+        }
+
+        .box-lr {
+            background: #f3e8ff;
+            border-color: #9333ea;
+            color: #6b21a8;
+        }
+
+        .box-p2 {
+            background: #faf5ff;
+            border-color: #c084fc;
+            color: #7c3aed;
+        }
+
+        .box-ensemble {
+            background: #ecfdf5;
+            border-color: #10b981;
+            color: #065f46;
+            width: 620px;
+        }
+
+        .box-output {
+            background: #1e293b;
+            border-color: #1e293b;
+            color: #f1f5f9;
+            width: 620px;
+        }
+
+        .arrow {
+            width: 2px;
+            height: 16px;
+            background: #94a3b8;
+            position: relative;
+        }
+
+        .arrow::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: -5px;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid #94a3b8;
+        }
+
+        .split-row {
+            display: flex;
+            gap: 80px;
+            align-items: flex-start;
+        }
+
+        .engine-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .engine-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
+            padding: 3px 12px;
+            border-radius: 6px;
+        }
+
+        .engine-label-blue {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .engine-label-purple {
+            background: #f3e8ff;
+            color: #7c3aed;
+        }
+
+        .merge-lines {
+            display: flex;
+            align-items: flex-end;
+            gap: 0;
+            height: 30px;
+            position: relative;
+            width: 520px;
+        }
+
+        .merge-left,
+        .merge-right {
+            flex: 1;
+            height: 100%;
+            border-bottom: 2px solid #94a3b8;
+        }
+
+        .merge-left {
+            border-right: 2px solid #94a3b8;
+            border-bottom-right-radius: 0;
+        }
+
+        .merge-right {
+            border-left: none;
+        }
+
+        .merge-center {
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid #94a3b8;
+        }
+
+        .merge-vert {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            height: 2px;
+            background: #94a3b8;
+        }
+
+        .title-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 30px;
+            letter-spacing: -0.5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="diagram">
+
+        <div class="title-text">Block Diagram of Proposed System</div>
+
+        <!-- Input -->
+        <div class="box box-input">
+            User Input Text
+            <div class="box-sub">Social Media Message / Investment Offer</div>
+        </div>
+        <div class="arrow"></div>
+
+        <!-- Preprocessing -->
+        <div class="box box-preprocess">
+            Text Preprocessing
+            <div class="box-sub">Lowercase → Remove URLs → Remove Punctuation → Remove Extra Spaces</div>
+        </div>
+        <div class="arrow"></div>
+
+        <!-- Split into 2 engines -->
+        <div class="split-row">
+            <!-- Engine 1 -->
+            <div class="engine-col">
+                <div class="engine-label engine-label-blue">Engine 1 — Keyword Based</div>
+                <div class="box box-tfidf" style="width:240px;">
+                    TF-IDF Vectorizer
+                    <div class="box-sub">10,000 Features</div>
+                </div>
+                <div class="arrow"></div>
+                <div class="box box-xgb" style="width:240px;">
+                    XGBoost Classifier
+                    <div class="box-sub">GPU Accelerated (CUDA)</div>
+                </div>
+                <div class="arrow"></div>
+                <div class="box box-p1" style="width:240px;">
+                    Scam Probability: P₁
+                </div>
+            </div>
+
+            <!-- Engine 2 -->
+            <div class="engine-col">
+                <div class="engine-label engine-label-purple">Engine 2 — Semantic Based</div>
+                <div class="box box-finbert" style="width:240px;">
+                    FinBERT Transformer
+                    <div class="box-sub">768-dim CLS Embedding</div>
+                </div>
+                <div class="arrow"></div>
+                <div class="box box-lr" style="width:240px;">
+                    Logistic Regression
+                    <div class="box-sub">class_weight = balanced</div>
+                </div>
+                <div class="arrow"></div>
+                <div class="box box-p2" style="width:240px;">
+                    Scam Probability: P₂
+                </div>
+            </div>
+        </div>
+
+        <!-- Merge arrows -->
+        <div class="merge-lines">
+            <div class="merge-left"></div>
+            <div class="merge-right"></div>
+            <div class="merge-center"></div>
+            <div class="merge-vert"></div>
+        </div>
+
+        <!-- Ensemble -->
+        <div class="box box-ensemble">
+            Ensemble: Weighted Average
+            <div class="box-sub">Final Probability = (50% × P₁) + (50% × P₂)</div>
+        </div>
+        <div class="arrow"></div>
+
+        <!-- Output -->
+        <div class="box box-output">
+            Final Output
+            <div class="box-sub" style="color:#94a3b8;">Scam / Legitimate &nbsp;|&nbsp; Probability % &nbsp;|&nbsp; Risk
+                Level (High / Medium / Low)</div>
+        </div>
+
+    </div>
+</body>
+
+</html>
